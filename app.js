@@ -1,8 +1,9 @@
 var express = require('express');
 var exphbs  = require('express-handlebars');
- 
+
 var app = express();
- 
+
+
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
@@ -17,5 +18,6 @@ app.get('/detail', function (req, res) {
 app.use(express.static('assets'));
  
 app.use('/assets', express.static(__dirname + '/assets'));
- 
-app.listen(3000);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT); 
