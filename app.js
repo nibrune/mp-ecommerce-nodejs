@@ -40,6 +40,7 @@ app.get('/pending', function (req, res) {
 app.post('/notification', function (req, res) {
     console.log("*******************NOTIFICACION********************");
     console.log(req.body);
+    res.sendStatus(200);
 });
 
 app.use(express.static('assets'));
