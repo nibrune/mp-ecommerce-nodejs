@@ -59,8 +59,8 @@ app.post('/pagar', function (req, res) {
             title: req.body.title,
             picture_url: req.body.img.replace('./', req.get('origin') + '/'),
             description: "​Dispositivo móvil de Tienda e-commerce",
-            quantity: req.body.unit,
-            unit_price: req.body.price
+            quantity: Number.parseInt(req.body.unit),
+            unit_price: Number.parseInt(req.body.price)
         }
     ],
     payer: {
