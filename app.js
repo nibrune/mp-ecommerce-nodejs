@@ -8,7 +8,8 @@ const mercadopago = require ('mercadopago');
 
 // Agrega credenciales
 mercadopago.configure({
-  access_token: 'APP_USR-6317427424180639-042414-47e969706991d3a442922b0702a0da44-469485398'
+    access_token: 'APP_USR-6317427424180639-042414-47e969706991d3a442922b0702a0da44-469485398',
+    integrator_id: 'dev_24c65fb163bf11ea96500242ac130004'
 });
 
 app.use(express.json())
@@ -24,6 +25,22 @@ app.get('/detail', function (req, res) {
     res.render('detail', req.query);
 });
 
+app.get('/success', function (req, res) {
+    res.render('success', req.query);
+});
+
+app.get('/failure', function (req, res) {
+    res.render('failure', req.query);
+});
+
+app.get('/pending', function (req, res) {
+    res.render('pending', req.query);
+});
+
+app.post('/notification', function (req, res) {
+    console.log(req.body);
+});
+
 app.use(express.static('assets'));
  
 app.use('/assets', express.static(__dirname + '/assets'));
@@ -34,40 +51,67 @@ app.listen(PORT);
 
 app.post('/pagar', function (req, res) {
 
-    //console.log(req.query)
-    console.log(req.body)
-
-    // Crea un objeto de preferencia
-    let preference = {
-
-        items: [
+   // Crea un objeto de preferencia
+   let preference = {
+    items: [
         {
-            title: 'Mi producto',
-            unit_price: 100,
-            quantity: 1,
-            id: "",
-            picture_url: "",
-            title: "Dummy Item",
-            description: "Multicolor Item",
-            category_id: "",
-            quantity: 1,
-            unit_price: 10
+            id: "1234",
+            title: req.body.title,
+            picture_url: req.body.img.replace('./', req.get('origin') + '/'),
+            description: "​Dispositivo móvil de Tienda e-commerce",
+            quantity: req.body.unit,
+            unit_price: req.body.price
         }
-        ]
-    };
-   
-    mercadopago.preferences.create(preference)
-    .then(function(response){
-    // Este valor reemplazará el string "<%= global.id %>" en tu HTML
-    global.id = response.body.id;
+    ],
+    payer: {
+        name: "Lalo",
+        surname: "Landa",
+        email: "test_user_63274575@testuser.com",
+        phone: {
+            area_code: "11",
+            number: 22223333
+        },
+        identification: {
+            type: "DNI",
+            number: 32659430
+        },
+        address: {
+            street_name: "False",
+            street_number: 123,
+            zip_code: "1111"
+        }
+    },
+    back_urls: {
+        success: req.get('origin') + "/success",
+        failure: req.get('origin') + "/failure",
+        pending: req.get('origin') + "/pending"
+    },
+    auto_return: "approved",
+    payment_methods: {
+        excluded_payment_methods: [
+            {
+                id: "amex"
+            }
+        ],
+        excluded_payment_types: [
+            {
+                id: "atm"
+            }
+        ],
+        installments: 6
+    },
+    notification_url: req.get('origin') + "/notification",
+    external_reference: "nibrune@gmail.com"
+};
 
-  //  console.log(response);
-    res.redirect(response.body.init_point);
-    }).catch(function(error){
-    console.log(error);
+mercadopago.preferences.create(preference)
+    .then(function (response) {
+        res.redirect(response.body.init_point);
+     }).catch(function (error) {
+        console.log(error);
+        res.redirect("/");
     });
 
-    
 });
 
 
