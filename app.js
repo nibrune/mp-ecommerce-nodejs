@@ -104,6 +104,7 @@ app.post('/pagar', function (req, res) {
     external_reference: "nibrune@gmail.com"
 };
 
+console.log(preference);
 mercadopago.preferences.create(preference)
     .then(function (response) {
         res.redirect(response.body.init_point);
