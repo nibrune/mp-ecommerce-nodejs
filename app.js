@@ -73,7 +73,7 @@ app.post('/pagar', function (req, res) {
         },
         identification: {
             type: "DNI",
-            number: 32659430
+            number: "32659430"
         },
         address: {
             street_name: "False",
