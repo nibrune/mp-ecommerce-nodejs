@@ -38,6 +38,7 @@ app.get('/pending', function (req, res) {
 });
 
 app.post('/notification', function (req, res) {
+    console.log("*******************NOTIFICACION********************");
     console.log(req.body);
 });
 
@@ -103,10 +104,12 @@ app.post('/pagar', function (req, res) {
     notification_url: req.get('origin') + "/notification",
     external_reference: "nibrune@gmail.com"
 };
-
+console.log("*******************PREFERENCE ********************");
 console.log(preference);
 mercadopago.preferences.create(preference)
     .then(function (response) {
+        console.log("*******************PREFERENCE RESPUESTA********************");
+        console.log(response.body);
         res.redirect(response.body.init_point);
      }).catch(function (error) {
         console.log(error);
